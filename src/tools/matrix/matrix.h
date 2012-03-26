@@ -123,14 +123,22 @@ public:
 		return *this;
 	}
 
+	MatrixNxN &operator/=(qreal alpha)
+	{
+		for (quint32 q, i = 0, size = m_data->dimension; i < size; ++i)
+			for (q = 0; q < size; ++q)
+				m_data->array[i * sizeof(qreal) + q] /= alpha;
+
+		return *this;
+	}
 
 	template <typename T>
 	MatrixNxN &operator+=(const Squared<T> &other)
 	{
 		Q_ASSERT(m_data->dimension == other.size());
 
-		for (quint32 i = 0, size = m_data->dimension; i < size; ++i)
-			for (quint32 q = 0; q < size; ++q)
+		for (quint32 q, i = 0, size = m_data->dimension; i < size; ++i)
+			for (q = 0; q < size; ++q)
 				m_data->array[i * sizeof(qreal) + q] += other.at(i, q);
 
 		return *this;
@@ -198,6 +206,8 @@ MatrixNxN correlation(const QVector<QVector<qreal> > &input)
 
 	for (quint32 i = 0, size = input.size(); i < size; ++i)
 		res += Squared<QVector<qreal> >(input.at(i));
+
+	res /= input.at(0).size();
 
 	return res;
 }
