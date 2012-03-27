@@ -1,27 +1,15 @@
 #include "chaoshopfieldneuralnet.h"
-#include "chaoshopfieldlayer.h"
 
 
 NEURAL_NET_NS_BEGIN
 
-ChaosHopfieldNeuralNet::ChaosHopfieldNeuralNet(quint32 dimension) :
+ChaosHopfieldNeuralNet::ChaosHopfieldNeuralNet(const Patterns &patterns) :
 	NeuralNet()
 {
-	layers().push_back(new ChaosHopfieldLayer(dimension));
-}
-
-ChaosHopfieldNeuralNet::ChaosHopfieldNeuralNet(const Layer::Weights &weights) :
-	NeuralNet()
-{
-	layers().push_back(new ChaosHopfieldLayer(weights));
+	layers().push_back(new ChaosHopfieldLayer(patterns));
 }
 
 void ChaosHopfieldNeuralNet::addLayer(quint32 dimension)
-{
-	Q_ASSERT_X(false, "ChaosHopfieldNeuralNet::addLayer", "Hopfield neural net is one layer net!");
-}
-
-void ChaosHopfieldNeuralNet::addLayer(const Layer::Weights &weights)
 {
 	Q_ASSERT_X(false, "ChaosHopfieldNeuralNet::addLayer", "Hopfield neural net is one layer net!");
 }

@@ -6,12 +6,18 @@
 
 int main(int argc, char *argv[])
 {
-	Aidns::NeuralNet::HopfieldNeuralNet net(100);
+	using namespace Aidns::NeuralNet;
+
+	HopfieldNeuralNet::Patterns p;
+
+	p << (Neuron::Input() <<  1 <<  1 << -1 <<  1);
+	p << (Neuron::Input() <<  1 << -1 << -1 <<  1);
+	p << (Neuron::Input() << -1 <<  1 <<  1 <<  1);
+
+	HopfieldNeuralNet net(p);
 
 
 
 	QApplication app(argc, argv);
-
-
     return app.exec();
 }
