@@ -17,7 +17,9 @@ int main(int argc, char *argv[])
 	HopfieldNeuralNet net(p);
 
 
-
 	QApplication app(argc, argv);
-    return app.exec();
+
+	qDebug() << net.compute(Neuron::Input() <<  1 <<  1 << -1 <<  1);
+
+	return app.exec();
 }
