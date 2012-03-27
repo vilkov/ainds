@@ -10,6 +10,7 @@ NEURAL_NET_NS_BEGIN
 class HopfieldLayer : public Layer
 {
 public:
+	typedef Output                 Neurons;
 	typedef QVector<Neuron::Input> Patterns;
 
 public:
@@ -18,8 +19,7 @@ public:
 	virtual const Output &compute(const Input &input);
 
 private:
-	Output m_output;
-	Tools::VectorN m_neurons;
+	Neurons m_neurons;
 	Tools::MatrixNxN m_weights;
 };
 

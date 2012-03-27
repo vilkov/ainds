@@ -1,27 +1,15 @@
 #include "hopfieldneuralnet.h"
-#include "hopfieldlayer.h"
 
 
 NEURAL_NET_NS_BEGIN
 
-HopfieldNeuralNet::HopfieldNeuralNet(quint32 dimension) :
+HopfieldNeuralNet::HopfieldNeuralNet(const Patterns &patterns) :
 	NeuralNet()
 {
-	layers().push_back(new HopfieldLayer(dimension));
-}
-
-HopfieldNeuralNet::HopfieldNeuralNet(const Layer::Weights &weights) :
-	NeuralNet()
-{
-	layers().push_back(new HopfieldLayer(weights));
+	layers().push_back(new HopfieldLayer(patterns));
 }
 
 void HopfieldNeuralNet::addLayer(quint32 dimension)
-{
-	Q_ASSERT_X(false, "HopfieldNeuralNet::addLayer", "Hopfield neural net is one layer net!");
-}
-
-void HopfieldNeuralNet::addLayer(const Layer::Weights &weights)
 {
 	Q_ASSERT_X(false, "HopfieldNeuralNet::addLayer", "Hopfield neural net is one layer net!");
 }

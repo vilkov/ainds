@@ -20,8 +20,6 @@ public:
 	const Layers &layers() const { return m_layers; }
 
 	virtual void addLayer(quint32 dimension) = 0;
-	virtual void addLayer(const Layer::Weights &weights) = 0;
-
     virtual const Output &compute(const Input &input) = 0;
 
 protected:

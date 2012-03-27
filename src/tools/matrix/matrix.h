@@ -102,11 +102,17 @@ public:
 	MatrixNxN(quint32 dimension);
 	MatrixNxN(quint32 dimension, bool cleanup);
 
+	qreal at(quint32 i, quint32 j) const
+	{
+		Q_ASSERT(i < m_data->dimension && j < m_data->dimension);
+		return m_data->array[i * m_data->dimension + j];
+	}
+
 	const qreal (&operator[](quint32 index) const) []
-    { Q_ASSERT(index < m_data->dimension); return (const qreal (&)[])m_data->array[index * sizeof(qreal)]; }
+    { Q_ASSERT(index < m_data->dimension); return (const qreal (&)[])m_data->array[index * m_data->dimension]; }
 
 	qreal (&operator[](quint32 index)) []
-    { Q_ASSERT(index < m_data->dimension); return (qreal (&)[])m_data->array[index * sizeof(qreal)]; }
+    { Q_ASSERT(index < m_data->dimension); return (qreal (&)[])m_data->array[index * m_data->dimension]; }
 
 	MatrixNxN &operator+=(const MatrixNxN &other)
 	{
@@ -116,7 +122,7 @@ public:
 		for (quint32 i = 0, size = m_data->dimension; i < size; ++i)
 			for (quint32 q = 0; q < size; ++q)
 			{
-				index = i * sizeof(qreal) + q;
+				index = i * size + q;
 				m_data->array[index] += other.m_data->array[index];
 			}
 
@@ -125,9 +131,11 @@ public:
 
 	MatrixNxN &operator/=(qreal alpha)
 	{
+		qreal *array = m_data->array;
+
 		for (quint32 q, i = 0, size = m_data->dimension; i < size; ++i)
 			for (q = 0; q < size; ++q)
-				m_data->array[i * sizeof(qreal) + q] /= alpha;
+				array[i * size + q] /= alpha;
 
 		return *this;
 	}
@@ -136,15 +144,37 @@ public:
 	MatrixNxN &operator+=(const Squared<T> &other)
 	{
 		Q_ASSERT(m_data->dimension == other.size());
+		qreal *array = m_data->array;
 
 		for (quint32 q, i = 0, size = m_data->dimension; i < size; ++i)
 			for (q = 0; q < size; ++q)
-				m_data->array[i * sizeof(qreal) + q] += other.at(i, q);
+				array[i * size + q] += other.at(i, q);
 
 		return *this;
 	}
 
 	quint32 dimension() const { return m_data->dimension; }
+
+	MatrixNxN & setDiagonal(qreal value)
+	{
+		qreal *array = m_data->array;
+		for (quint32 i = 0, size = m_data->dimension; i < size; ++i)
+			array[i * size + i] = value;
+
+		return *this;
+	}
+
+	static MatrixNxN correlation(const QVector<QVector<qreal> > &input)
+	{
+		MatrixNxN res(input.at(0).size(), true);
+
+		for (quint32 i = 0, size = input.size(); i < size; ++i)
+			res += Squared<QVector<qreal> >(input.at(i));
+
+		res /= input.at(0).size();
+
+		return res;
+	}
 
 private:
 	struct Data : public QSharedData
@@ -198,19 +228,6 @@ private:
 	Holder m_data;
 };
 
-
-/***********************************************************************************************************/
-MatrixNxN correlation(const QVector<QVector<qreal> > &input)
-{
-	MatrixNxN res(input.at(0).size(), true);
-
-	for (quint32 i = 0, size = input.size(); i < size; ++i)
-		res += Squared<QVector<qreal> >(input.at(i));
-
-	res /= input.at(0).size();
-
-	return res;
-}
 
 TOOLS_NS_END
 
